@@ -21,13 +21,7 @@ class ContactsVC: UIViewController {
         contactsTableView.delegate = self
         contactsTableView.dataSource = self
         
-        let c1 = Contact(kisi_id: "1", kisi_ad: "John", kisi_tel: "1111")
-        let c2 = Contact(kisi_id: "2", kisi_ad: "Rick", kisi_tel: "2222")
-        let c3 = Contact(kisi_id: "3", kisi_ad: "Kevin", kisi_tel: "3333")
         
-        contactsList.append(c1)
-        contactsList.append(c2)
-        contactsList.append(c3)
     }
 }
 

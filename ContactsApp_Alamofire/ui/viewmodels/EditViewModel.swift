@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+class EditViewModel {
+    var crepo = ContactsDaoRepository()
+    
+    func update(contactID: String, contactName: String, contactPhone: String){
+        crepo.update(contactID: contactID, contactName: contactName, contactPhone: contactPhone)
+    }
+}
