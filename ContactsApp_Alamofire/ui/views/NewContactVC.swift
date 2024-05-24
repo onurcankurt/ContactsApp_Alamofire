@@ -19,7 +19,8 @@ class NewContactVC: UIViewController {
     }
     
     @IBAction func saveButton(_ sender: Any) {
+        if let kisi_ad = nameTextfield.text, let kisi_tel = phoneTextfield.text{
+            print("\(kisi_ad) -  \(kisi_tel) saved.")
+        }
     }
-    
-
 }
