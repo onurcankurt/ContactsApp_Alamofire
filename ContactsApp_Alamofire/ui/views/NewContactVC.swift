@@ -12,6 +12,8 @@ class NewContactVC: UIViewController {
     @IBOutlet weak var nameTextfield: UITextField!
     @IBOutlet weak var phoneTextfield: UITextField!
     
+    var viewModel = NewContactViewModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -20,7 +22,7 @@ class NewContactVC: UIViewController {
     
     @IBAction func saveButton(_ sender: Any) {
         if let kisi_ad = nameTextfield.text, let kisi_tel = phoneTextfield.text{
-            print("\(kisi_ad) -  \(kisi_tel) saved.")
+            viewModel.save(contactName: kisi_ad, contactPhone: kisi_tel)
         }
     }
 }

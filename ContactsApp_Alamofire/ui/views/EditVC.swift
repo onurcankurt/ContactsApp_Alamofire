@@ -13,6 +13,7 @@ class EditVC: UIViewController {
     @IBOutlet weak var phoneTextfield: UITextField!
     
     var editContact: Contact?
+    var viewModel = EditViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,7 +25,7 @@ class EditVC: UIViewController {
     }
     @IBAction func updateButton(_ sender: Any) {
         if let kisi_id = editContact!.kisi_id, let kisi_ad = nameTextfield.text, let kisi_tel = phoneTextfield.text{
-            print("ID: \(kisi_id) - \(kisi_ad) -  \(kisi_tel) updated.")
+            viewModel.update(contactID: kisi_id, contactName: kisi_ad, contactPhone: kisi_tel)
         }
     }
 }

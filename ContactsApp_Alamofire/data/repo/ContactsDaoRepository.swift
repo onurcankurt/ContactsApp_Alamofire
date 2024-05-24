@@ -13,31 +13,84 @@ class ContactsDaoRepository {
     var contactsList = BehaviorSubject<[Contact]>(value: [Contact]())
     
     func save(contactName: String, contactPhone: String){
-        print("\(contactName) -  \(contactPhone) saved.")
+        let params: Parameters = ["kisi_ad": contactName, "kisi_tel": contactPhone]
+        
+        AF.request("http://kasimadalan.pe.hu/kisiler/insert_kisiler.php", method: .post, parameters: params).response { response in
+            if let data = response.data{
+                do {
+                    let responseJSON = try JSONDecoder().decode(CRUDResponse.self, from: data)
+                    print("Message : \(responseJSON.message!)")
+                    print("Success : \(responseJSON.success!)")
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+        }
     }
     
     func update(contactID: String, contactName: String, contactPhone: String){
-        print("ID: \(contactID) - \(contactName) -  \(contactPhone) updated.")
+        let params: Parameters = ["kisi_id": contactID, "kisi_ad": contactName, "kisi_tel": contactPhone]
+        
+        AF.request("http://kasimadalan.pe.hu/kisiler/update_kisiler.php", method: .post, parameters: params).response { response in
+            if let data = response.data {
+                do {
+                    let responseJSON = try JSONDecoder().decode(CRUDResponse.self, from: data)
+                    print("Message : \(responseJSON.message!)")
+                    print("Success : \(responseJSON.success!)")
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+        }
     }
     
     func delete(contactID: String){
-        print("ID: \(contactID) deleted from contacts.")
+        let params: Parameters = ["kisi_id": contactID]
+        
+        AF.request("http://kasimadalan.pe.hu/kisiler/delete_kisiler.php", method: .post, parameters: params).response { response in
+            if let data = response.data{
+                do{
+                    let responseJSON = try JSONDecoder().decode(CRUDResponse.self, from: data)
+                    print("Message: \(responseJSON.message!)")
+                    print("Success: \(responseJSON.success!)")
+                    self.uploadContacts()
+                    
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+        }
     }
     
     func search(searchText: String){
-        print("Search: \(searchText)")
+        let params: Parameters = ["kisi_ad": searchText]
+        
+        AF.request("http://kasimadalan.pe.hu/kisiler/tum_kisiler_arama.php", method: .post, parameters: params).response { response in
+            if let data = response.data{
+                do {
+                    let responseJSON = try JSONDecoder().decode(ContactsResponse.self, from: data)
+                    if let list = responseJSON.kisiler{
+                        self.contactsList.onNext(list)
+                    }
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+        }
     }
     
     func uploadContacts(){
-        
-                
-        
-//        let c1 = Contact(kisi_id: "1", kisi_ad: "John", kisi_tel: "1111")
-//        let c2 = Contact(kisi_id: "2", kisi_ad: "Rick", kisi_tel: "2222")
-//        let c3 = Contact(kisi_id: "3", kisi_ad: "Kevin", kisi_tel: "3333")
-//        
-//        contactsList.append(c1)
-//        contactsList.append(c2)
-//        contactsList.append(c3)
+        AF.request("http://kasimadalan.pe.hu/kisiler/tum_kisiler.php", method: .get).response { response in
+            if let data = response.data{
+                do {
+                    let responseJSON = try JSONDecoder().decode(ContactsResponse.self, from: data)
+                    if let list = responseJSON.kisiler{
+                        self.contactsList.onNext(list)
+                    }
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+        }
     }
 }

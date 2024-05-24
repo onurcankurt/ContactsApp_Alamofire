@@ -13,6 +13,7 @@ class ContactsVC: UIViewController {
     @IBOutlet weak var contactsTableView: UITableView!
     
     var contactsList = [Contact]()
+    var viewModel = ContactsViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,13 +22,22 @@ class ContactsVC: UIViewController {
         contactsTableView.delegate = self
         contactsTableView.dataSource = self
         
-        
+        _ = viewModel.contactsListVM.subscribe(onNext: { contacts in
+            self.contactsList = contacts
+            DispatchQueue.main.async {
+                self.contactsTableView.reloadData()
+            }
+        })
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        viewModel.uploadContacts()
     }
 }
 
 extension ContactsVC: UISearchBarDelegate{
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print("Search: \(searchText)")
+        viewModel.search(searchText: searchText)
     }
     
 }
@@ -68,7 +78,7 @@ extension ContactsVC: UITableViewDelegate, UITableViewDataSource {
             let deleteAlert = UIAlertController(title: "Delete", message: "Do you want to delete \(contact.kisi_ad!)", preferredStyle: .alert)
             let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
             let yesAction = UIAlertAction(title: "Yes", style: .destructive) { alert in
-                print("ID: \(contact.kisi_id!) deleted from contacts.")
+                self.viewModel.delete(contactID: contact.kisi_id!)
             }
             deleteAlert.addAction(cancelAction)
             deleteAlert.addAction(yesAction)

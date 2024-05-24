@@ -10,10 +10,10 @@ import RxSwift
 
 class ContactsViewModel {
     var crepo = ContactsDaoRepository()
-    var contactsList = BehaviorSubject<[Contact]>(value: [Contact]())
+    var contactsListVM = BehaviorSubject<[Contact]>(value: [Contact]())
     
     init() {
-        contactsList = crepo.contactsList
+        contactsListVM = crepo.contactsList
         uploadContacts()
     }
     

@@ -8,6 +8,6 @@
 import Foundation
 
 class CRUDResponse: Codable {
-    var messagge: String?
-    var success: String?
+    var message: String?
+    var success: Int?
 }
